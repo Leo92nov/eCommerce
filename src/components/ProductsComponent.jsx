@@ -16,18 +16,19 @@ export default function ProductsComponent() {
     return <>
 
         {productos.map((prod) =>
-        (<section className="h-80 w-50">
+        (<section className="h-auto w-50">
+            <div className="flex flex-col gap">
+                <img className="w-50 h-50" src={prod.image} alt="" />
 
-            <img className="w-50 h-50 my-4" src={prod.image} alt="" />
+                <h2 className="text-white text-xl" key={prod.id}>
+                    {prod.title}
+                </h2>
 
-            <h2 className="text-white text-xl" key={prod.id}>
-                {prod.title}
-            </h2>
+                <p>${prod.price}</p>
 
-            <p>${prod.price}</p>
-
-            <p>{prod.description}</p>
-            <div className="h-40">asdasd</div>
+                <p>{prod.description}</p>
+                <div className="">asdasd</div>
+            </div>
         </section>
         ))}
 
