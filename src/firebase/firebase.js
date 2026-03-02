@@ -3,7 +3,7 @@ import { initializeApp } from "firebase/app";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
-import {collection, getDocs, getFirestore} from "firebase/firestore";
+import {collection, getDocs, getFirestore, query, where} from "firebase/firestore";
 
 
 // Your web app's Firebase configuration
@@ -27,4 +27,12 @@ export async function getProducts(){
     const listaProductos = [];
     response.forEach((documento) => listaProductos.push({id: documento.id, ...documento.data()})) /* .data() trae todos los campos del documento */
     return listaProductos;
+}
+
+export async function filterProdsByPrice(maxPrice) {
+    const q = query(collection(db,"products"), where("price", "<", maxPrice))
+    const response = await getDocs(q)
+    const listaFiltroPrecio = []
+    response.forEach(docu => listaFiltroPrecio.push({id:docu.id, ...docu.data()}))
+    return listaFiltroPrecio
 }
