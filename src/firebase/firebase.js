@@ -3,7 +3,7 @@ import { initializeApp } from "firebase/app";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
-import {collection, getDocs, getFirestore, query, where} from "firebase/firestore";
+import {addDoc, collection, getDocs, getFirestore, query, where} from "firebase/firestore";
 
 
 // Your web app's Firebase configuration
@@ -35,4 +35,24 @@ export async function filterProdsByPrice(maxPrice) {
     const listaFiltroPrecio = []
     response.forEach(docu => listaFiltroPrecio.push({id:docu.id, ...docu.data()}))
     return listaFiltroPrecio
+}
+
+
+/* enviar orden de pedido */
+export async function addOrder(order){
+  const orderCollection = collection(db, "orders")
+  const docRef = await addDoc(orderCollection, order)
+  console.log(docRef);
+  console.log(docRef.id)
+  return docRef.id
+
+}
+
+export async function getOrders(){
+
+  const response = await getDocs(collection(db, "orders"))
+  const listaOrdenes = []
+  response.forEach((ord) => listaOrdenes.push({id:ord.id, ...ord.data()}))
+ console.log(listaOrdenes);
+ 
 }

@@ -1,7 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { getProducts, filterProdsByPrice } from "../firebase/firebase"
-import { useEffect } from "react";
-import MaxPrecio from "./MaxPrecio";
 
 export default function ProductsComponent() {
 
