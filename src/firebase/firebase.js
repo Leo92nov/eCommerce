@@ -3,7 +3,7 @@ import { initializeApp } from "firebase/app";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
-import {addDoc, collection, getDocs, getFirestore, query, where} from "firebase/firestore";
+import {addDoc, collection, doc, getDocs, getFirestore, query, updateDoc, where} from "firebase/firestore";
 
 
 // Your web app's Firebase configuration
@@ -55,4 +55,16 @@ export async function getOrders(){
   response.forEach((ord) => listaOrdenes.push({id:ord.id, ...ord.data()}))
  console.log(listaOrdenes);
  
+}
+
+export async function updateProduct(id, toUpdate) {
+  const productDoc = doc(db, "products", id)
+  
+  try{
+    await updateDoc(productDoc, toUpdate)
+  } catch (error){
+    console.log("Error" + error);
+    
+  }
+
 }
