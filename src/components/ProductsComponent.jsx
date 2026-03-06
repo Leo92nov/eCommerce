@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
-import { getProducts, filterProdsByPrice, updateProduct } from "../firebase/firebase";
+import { getProducts, filterProdsByPrice, updateProduct, getCarrito } from "../firebase/firebase";
 
 export default function ProductsComponent() {
   const [productos, setProductos] = useState([]);
   const [precioMax, setPrecio] = useState("");
   const [cantidades, setCantidades] = useState({});
+  const [alCarro, setAlCarro] = useState({})
 
   useEffect(() => {
     getProducts().then((prod) => setProductos(prod));
@@ -41,10 +42,26 @@ export default function ProductsComponent() {
 
     setCantidades((prev) => {
       const actual = Number(prev[key] ?? 0);
+      
       if (actual <= 0) return prev;
       return { ...prev, [key]: actual - 1 };
     });
   };
+
+  const handleAgregarAlCarro = async (id) =>{
+    const key = String(id)
+    const carrito = await getCarrito()
+    console.log(carrito);
+
+    setAlCarro((e)=>{
+      const elementoASumar = e[key];
+      console.log(elementoASumar);
+      
+      
+
+    })
+    
+  }
 
   return (
     <div>
@@ -108,7 +125,11 @@ export default function ProductsComponent() {
                   >
                     +
                   </button>
+
                 </div>
+
+                <button onClick={() => handleAgregarAlCarro(id)} className="mt-6 border rounded-xl p-1 hover:scale-105 hover:transition-transform hover:duration-400 cursor-pointer">Agregar al Carrito</button>
+                
               </div>
             </section>
           );

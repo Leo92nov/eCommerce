@@ -68,3 +68,9 @@ export async function updateProduct(id, toUpdate) {
   }
 
 }
+export async function getCarrito() {
+  const response = await getDocs(collection(db,"carrito"))
+  const carrito = []
+  response.forEach((carro) => carrito.push({id:carro.id, ...carro.data()}))
+  return carrito
+}
