@@ -5,7 +5,7 @@ export default function ProductsComponent() {
   const [productos, setProductos] = useState([]);
   const [precioMax, setPrecio] = useState("");
   const [cantidades, setCantidades] = useState({});
-  const [alCarro, setAlCarro] = useState({})
+  const [alCarro, setAlCarro] = useState([])
 
   useEffect(() => {
     getProducts().then((prod) => setProductos(prod));
@@ -42,26 +42,54 @@ export default function ProductsComponent() {
 
     setCantidades((prev) => {
       const actual = Number(prev[key] ?? 0);
-      
+
       if (actual <= 0) return prev;
       return { ...prev, [key]: actual - 1 };
     });
   };
 
-  const handleAgregarAlCarro = async (id) =>{
+  const handleAgregarAlCarro = async (id) => {
     const key = String(id)
     const carrito = await getCarrito()
-    console.log(carrito);
 
-    setAlCarro((e)=>{
-      const elementoASumar = e[key];
-      console.log(elementoASumar);
-      
-      
+    /* TRAE EL CARRITO VACIO DE FIREBASE */
+
+    console.log(carrito);
+    const productoSenalado = productos.find(p => p.id == key)
+
+    /* BUSCA EL PRODUCTO QUE SE ESTA CLICKEANDO POR MATCH DE ID */
+
+    setAlCarro((prev) => {
+      const nuevoProducto = {
+        title: productoSenalado.title,
+        price: productoSenalado.price,
+        cantidad: Number(cantidades[key])
+      }
+      /* CREA UN NUEVO OPBJETO PARA EMPUJAR AL CARRITO */
+
+      /* SI NUEVOPRODUCTO.TITLE ES IGUAL A OBJETO DENTRO DE CARRITO.TITLE, SE SUMA LA CANTIDAD DE UNO Y otro */
+
+      const nuevoCarrito = [...prev, nuevoProducto]
+      console.log(nuevoCarrito);
+
+      const productoYaAgregado = prev.find((p) => p.title === nuevoProducto.title)
+
+
+      if (productoYaAgregado) {
+        return prev.map((p) =>
+          p.title === nuevoProducto.title
+            ? { ...p, cantidad: p.cantidad + nuevoProducto.cantidad }
+            : p
+        );
+      }
+      return [...prev, nuevoProducto]
 
     })
-    
   }
+
+
+
+
 
   return (
     <div>
@@ -129,7 +157,7 @@ export default function ProductsComponent() {
                 </div>
 
                 <button onClick={() => handleAgregarAlCarro(id)} className="mt-6 border rounded-xl p-1 hover:scale-105 hover:transition-transform hover:duration-400 cursor-pointer">Agregar al Carrito</button>
-                
+
               </div>
             </section>
           );
