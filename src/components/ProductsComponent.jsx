@@ -60,6 +60,7 @@ export default function ProductsComponent() {
     /* BUSCA EL PRODUCTO QUE SE ESTA CLICKEANDO POR MATCH DE ID */
 
     setAlCarro((prev) => {
+  
       const nuevoProducto = {
         title: productoSenalado.title,
         price: productoSenalado.price,
@@ -83,8 +84,9 @@ export default function ProductsComponent() {
         );
       }
       return [...prev, nuevoProducto]
-
+      
     })
+    console.log(alCarro);
   }
 
 
@@ -156,7 +158,7 @@ export default function ProductsComponent() {
 
                 </div>
 
-                <button onClick={() => handleAgregarAlCarro(id)} className="mt-6 border rounded-xl p-1 hover:scale-105 hover:transition-transform hover:duration-400 cursor-pointer">Agregar al Carrito</button>
+                <button disabled={cant === 0} onClick={() => handleAgregarAlCarro(id)} className="disabled:hover:scale-100 disabled:opacity-40 disabled:cursor-not-allowed mt-6 border rounded-xl p-1 hover:scale-105 hover:transition-transform hover:duration-400 cursor-pointer">Agregar al Carrito</button>
 
               </div>
             </section>

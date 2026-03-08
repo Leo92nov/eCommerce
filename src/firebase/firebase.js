@@ -74,3 +74,14 @@ export async function getCarrito() {
   response.forEach((carro) => carrito.push({id:carro.id, ...carro.data()}))
   return carrito
 }
+
+export async function updateCarrito(id, toUpdate){
+  const carrito = doc(db, "carrito", id)
+
+  try {
+    await updateDoc(carrito, toUpdate)
+  } catch(error){
+    console.log("error", error);
+    
+  }
+}
