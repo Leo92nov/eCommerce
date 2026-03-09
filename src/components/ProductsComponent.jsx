@@ -111,10 +111,10 @@ export default function ProductsComponent() {
           const stock = Number(prod.stock ?? 0);
 
           return (
-            <section
+                        <section
               key={id}
-              className="w-60 h-auto bg-blue-100 flex justify-center items-start"
-            >
+              className="w-60 h-auto bg-blue-100 flex justify-center items-start">
+
               <div className="w-50 h-auto flex flex-col items-center">
                 <img className="w-50 h-50" src={prod.image} alt="" />
 
@@ -122,7 +122,7 @@ export default function ProductsComponent() {
 
                 <p className="text-center py-4">${prod.price}</p>
 
-                <p>{prod.description}</p>
+                <p className="line-clamp-4">{prod.description}</p>
 
                 <p className="my-4">Stock actual: {prod.stock}</p>
 
@@ -134,8 +134,7 @@ export default function ProductsComponent() {
                   <button
                     onClick={() => handleDisminucion(id)}
                     disabled={cant === 0}
-                    className="text-2xl cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
-                  >
+                    className="text-2xl cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed">
                     -
                   </button>
 
