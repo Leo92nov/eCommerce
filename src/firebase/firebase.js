@@ -3,7 +3,7 @@ import { initializeApp } from "firebase/app";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
-import {addDoc, collection, doc, getDocs, getFirestore, query, updateDoc, where} from "firebase/firestore";
+import {addDoc, collection, doc, getDocs, getFirestore, query, updateDoc, where, arrayUnion} from "firebase/firestore";
 
 
 // Your web app's Firebase configuration
@@ -75,13 +75,12 @@ export async function getCarrito() {
   return carrito
 }
 
-export async function updateCarrito(id, toUpdate){
-  const carrito = doc(db, "carrito", id)
+export async function updateCarrito(carrito){
 
-  try {
-    await updateDoc(carrito, toUpdate)
-  } catch(error){
-    console.log("error", error);
-    
-  }
+  const ref = doc(db, "carritos", "N0NghdC6J4bPsduTkTDk")
+
+  await updateDoc(ref, {
+    items: carrito
+  })
+
 }

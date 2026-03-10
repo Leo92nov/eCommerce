@@ -1,62 +1,62 @@
 import { useState, useEffect } from "react";
-import { getProducts, filterProdsByPrice, updateProduct, getCarrito } from "../firebase/firebase";
+import { getProducts, filterProdsByPrice, updateProduct, getCarrito, updateCarrito } from "../firebase/firebase";
 
 export default function ProductsComponent() {
   const [productos, setProductos] = useState([]);
   const [precioMax, setPrecio] = useState("");
   const [cantidades, setCantidades] = useState({});
   const [alCarro, setAlCarro] = useState([])
-  
+
   useEffect(() => {
     getProducts().then((prod) => setProductos(prod));
   }, []);
-  
-  useEffect(() =>{
+
+  useEffect(() => {
     console.log("carrito actualizado ", alCarro);
-    
+
   }, [alCarro]);
-  
+
   const handleClick = () => {
     if (precioMax === "") {
       getProducts().then((prod) => setProductos(prod));
       return;
     }
-    
+
     const max = Number(precioMax);
     filterProdsByPrice(max).then((prod) => setProductos(prod));
   };
-  
+
   const hadleUpdate = async (event) => {
     await updateProduct(event.target.id, { price: 180 });
     getProducts().then((prod) => setProductos(prod));
   };
-  
+
   const handleAumento = (id, stock) => {
     const key = String(id);
     const max = Number(stock ?? Infinity);
-    
+
     setCantidades((prev) => {
       const actual = Number(prev[key] ?? 0);
       if (actual >= max) return prev;
       return { ...prev, [key]: actual + 1 };
     });
   };
-  
+
   const handleDisminucion = (id) => {
     const key = String(id);
-    
+
     setCantidades((prev) => {
       const actual = Number(prev[key] ?? 0);
-      
+
       if (actual <= 0) return prev;
       return { ...prev, [key]: actual - 1 };
     });
   };
-  
+
   const handleAgregarAlCarro = async (id) => {
-   
+
     const key = String(id)
-     /* RECONOCE QUE PODRUCTO ESTAS CLICKEANDO */
+    /* RECONOCE QUE PODRUCTO ESTAS CLICKEANDO */
 
 
     const carrito = await getCarrito()
@@ -68,7 +68,7 @@ export default function ProductsComponent() {
 
 
     setAlCarro((prev) => {
-  
+
       const nuevoProducto = {
         title: productoSenalado.title,
         price: productoSenalado.price,
@@ -91,10 +91,18 @@ export default function ProductsComponent() {
 
         return [...prev, nuevoProducto]
       }
-      
+
+      /*   const hadleUpdate = async (event) => {
+    await updateProduct(event.target.id, { price: 180 });
+    getProducts().then((prod) => setProductos(prod));
+  }; */
+
+
 
     })
+    await updateCarrito(alCarro)
   }
+
 
 
   return (
@@ -115,7 +123,7 @@ export default function ProductsComponent() {
           const stock = Number(prod.stock ?? 0);
 
           return (
-                        <section
+            <section
               key={id}
               className="w-60 h-auto bg-blue-100 flex justify-center items-start">
 
