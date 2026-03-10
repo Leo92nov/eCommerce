@@ -6,58 +6,66 @@ export default function ProductsComponent() {
   const [precioMax, setPrecio] = useState("");
   const [cantidades, setCantidades] = useState({});
   const [alCarro, setAlCarro] = useState([])
-
+  
   useEffect(() => {
     getProducts().then((prod) => setProductos(prod));
   }, []);
-
+  
+  useEffect(() =>{
+    console.log("carrito actualizado ", alCarro);
+    
+  }, [alCarro]);
+  
   const handleClick = () => {
     if (precioMax === "") {
       getProducts().then((prod) => setProductos(prod));
       return;
     }
-
+    
     const max = Number(precioMax);
     filterProdsByPrice(max).then((prod) => setProductos(prod));
   };
-
+  
   const hadleUpdate = async (event) => {
     await updateProduct(event.target.id, { price: 180 });
     getProducts().then((prod) => setProductos(prod));
   };
-
+  
   const handleAumento = (id, stock) => {
     const key = String(id);
     const max = Number(stock ?? Infinity);
-
+    
     setCantidades((prev) => {
       const actual = Number(prev[key] ?? 0);
       if (actual >= max) return prev;
       return { ...prev, [key]: actual + 1 };
     });
   };
-
+  
   const handleDisminucion = (id) => {
     const key = String(id);
-
+    
     setCantidades((prev) => {
       const actual = Number(prev[key] ?? 0);
-
+      
       if (actual <= 0) return prev;
       return { ...prev, [key]: actual - 1 };
     });
   };
-
+  
   const handleAgregarAlCarro = async (id) => {
+   
     const key = String(id)
-    const carrito = await getCarrito()
+     /* RECONOCE QUE PODRUCTO ESTAS CLICKEANDO */
 
+
+    const carrito = await getCarrito()
     /* TRAE EL CARRITO VACIO DE FIREBASE */
 
-    console.log(carrito);
-    const productoSenalado = productos.find(p => p.id == key)
 
+    const productoSenalado = productos.find(p => p.id == key)
     /* BUSCA EL PRODUCTO QUE SE ESTA CLICKEANDO POR MATCH DE ID */
+
 
     setAlCarro((prev) => {
   
@@ -68,12 +76,9 @@ export default function ProductsComponent() {
       }
       /* CREA UN NUEVO OPBJETO PARA EMPUJAR AL CARRITO */
 
-      /* SI NUEVOPRODUCTO.TITLE ES IGUAL A OBJETO DENTRO DE CARRITO.TITLE, SE SUMA LA CANTIDAD DE UNO Y otro */
-
-      const nuevoCarrito = [...prev, nuevoProducto]
-      console.log(nuevoCarrito);
 
       const productoYaAgregado = prev.find((p) => p.title === nuevoProducto.title)
+      /* SI NUEVOPRODUCTO.TITLE ES IGUAL A OBJETO DENTRO DE CARRITO.TITLE, SE SUMA LA CANTIDAD DE UNO Y otro */
 
 
       if (productoYaAgregado) {
@@ -82,15 +87,14 @@ export default function ProductsComponent() {
             ? { ...p, cantidad: p.cantidad + nuevoProducto.cantidad }
             : p
         );
+      } else {
+
+        return [...prev, nuevoProducto]
       }
-      return [...prev, nuevoProducto]
       
+
     })
-    console.log(alCarro);
   }
-
-
-
 
 
   return (
