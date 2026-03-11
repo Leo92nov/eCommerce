@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getProducts, filterProdsByPrice, updateProduct, getCarrito, updateCarrito } from "../firebase/firebase";
+import { getProducts, filterProdsByPrice, updateProduct, getCarrito, updateCarrito, deleteCarrito } from "../firebase/firebase";
 
 export default function ProductsComponent() {
   const [productos, setProductos] = useState([]);
@@ -60,47 +60,53 @@ export default function ProductsComponent() {
 
 
     const carrito = await getCarrito()
+    console.log(carrito);
     /* TRAE EL CARRITO VACIO DE FIREBASE */
 
 
     const productoSenalado = productos.find(p => p.id == key)
     /* BUSCA EL PRODUCTO QUE SE ESTA CLICKEANDO POR MATCH DE ID */
+    console.log(productoSenalado);
+    
+
+    /* ARMA NUEVO CARRO */
 
 
-    setAlCarro((prev) => {
-
-      const nuevoProducto = {
-        title: productoSenalado.title,
-        price: productoSenalado.price,
-        cantidad: Number(cantidades[key])
-      }
-      /* CREA UN NUEVO OPBJETO PARA EMPUJAR AL CARRITO */
-
-
-      const productoYaAgregado = prev.find((p) => p.title === nuevoProducto.title)
-      /* SI NUEVOPRODUCTO.TITLE ES IGUAL A OBJETO DENTRO DE CARRITO.TITLE, SE SUMA LA CANTIDAD DE UNO Y otro */
+    const nuevoProducto = {
+      title: productoSenalado.title,
+      price: productoSenalado.price,
+      cantidad: Number(cantidades[key])
+    }
+    console.log(nuevoProducto.cantidad);
+    
+    /* CREA UN NUEVO OPBJETO PARA EMPUJAR AL CARRITO */
 
 
-      if (productoYaAgregado) {
-        return prev.map((p) =>
-          p.title === nuevoProducto.title
-            ? { ...p, cantidad: p.cantidad + nuevoProducto.cantidad }
-            : p
-        );
-      } else {
+    const productoYaAgregado = alCarro.find((p) => p.title === nuevoProducto.title)
+    /* SI NUEVOPRODUCTO.TITLE ES IGUAL A OBJETO DENTRO DE CARRITO.TITLE, SE SUMA LA CANTIDAD DE UNO Y otro */
 
-        return [...prev, nuevoProducto]
-      }
+    let nuevoCarrito
 
-      /*   const hadleUpdate = async (event) => {
-    await updateProduct(event.target.id, { price: 180 });
-    getProducts().then((prod) => setProductos(prod));
-  }; */
+    if (productoYaAgregado) {
+      nuevoCarrito = alCarro.map((p) =>
+        p.title === nuevoProducto.title
+      ? { ...p, cantidad: p.cantidad + nuevoProducto.cantidad }
+      : p
+    );
+  } else {
+    nuevoCarrito = [...alCarro, nuevoProducto]
+  }
+  
+  
+    setAlCarro(nuevoCarrito) 
+    
+    
+    await updateCarrito(nuevoCarrito)
+    
+  }
 
-
-
-    })
-    await updateCarrito(alCarro)
+  const handleWipeCarrito = () =>{
+      deleteCarrito([])
   }
 
 
@@ -170,6 +176,9 @@ export default function ProductsComponent() {
                 </div>
 
                 <button disabled={cant === 0} onClick={() => handleAgregarAlCarro(id)} className="disabled:hover:scale-100 disabled:opacity-40 disabled:cursor-not-allowed mt-6 border rounded-xl p-1 hover:scale-105 hover:transition-transform hover:duration-400 cursor-pointer">Agregar al Carrito</button>
+
+                <button onClick={handleWipeCarrito} className="border rounded-xl p-1 mt-4">Limpiar carrito</button>
+
 
               </div>
             </section>

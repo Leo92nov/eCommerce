@@ -3,7 +3,7 @@ import { initializeApp } from "firebase/app";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
-import {addDoc, collection, doc, getDocs, getFirestore, query, updateDoc, where, arrayUnion} from "firebase/firestore";
+import {addDoc, collection, doc, getDoc, getDocs, getFirestore, query, updateDoc, where} from "firebase/firestore";
 
 
 // Your web app's Firebase configuration
@@ -69,18 +69,28 @@ export async function updateProduct(id, toUpdate) {
 
 }
 export async function getCarrito() {
-  const response = await getDocs(collection(db,"carrito"))
-  const carrito = []
-  response.forEach((carro) => carrito.push({id:carro.id, ...carro.data()}))
+const ref = doc(db, "carritos", "N0NghdC6J4bPsduTkTDk")
+const response = await getDoc(ref)
+  const carrito = response.data()
   return carrito
 }
 
-export async function updateCarrito(carrito){
+export async function updateCarrito(nuevoCarrito){
 
   const ref = doc(db, "carritos", "N0NghdC6J4bPsduTkTDk")
 
   await updateDoc(ref, {
-    items: carrito
+    items: nuevoCarrito
+  })
+
+}
+
+export async function deleteCarrito([]){
+
+  const ref = doc(db, "carritos", "N0NghdC6J4bPsduTkTDk")
+
+  await updateDoc(ref, {
+    items: {}
   })
 
 }
