@@ -3,7 +3,7 @@ import { initializeApp } from "firebase/app";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
-import {addDoc, collection, doc, getDoc, getDocs, getFirestore, query, updateDoc, where} from "firebase/firestore";
+import {addDoc, collection, doc, getDoc, getDocs, getFirestore, query, updateDoc, where, onSnapshot} from "firebase/firestore";
 
 
 // Your web app's Firebase configuration
@@ -93,4 +93,15 @@ export async function deleteCarrito([]){
     items: {}
   })
 
+}
+
+export function carritoExtension(callback) {
+  const ref = doc(db,"carritos", "N0NghdC6J4bPsduTkTDk")
+
+  return onSnapshot(ref, (snapshot) => {
+    const data = snapshot.data()
+    const cantidad = data?.items?.length || 0
+    callback(cantidad)
+  })
+   
 }

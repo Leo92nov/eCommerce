@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getProducts, filterProdsByPrice, updateProduct, getCarrito, updateCarrito, deleteCarrito } from "../firebase/firebase";
+import { getProducts, filterProdsByPrice, updateProduct, getCarrito, updateCarrito, deleteCarrito, carritoExtension } from "../firebase/firebase";
 
 export default function ProductsComponent() {
   const [productos, setProductos] = useState([]);
@@ -15,6 +15,12 @@ export default function ProductsComponent() {
     console.log("carrito actualizado ", alCarro);
 
   }, [alCarro]);
+
+  useEffect(() => {
+  getCarrito().then((carrito) => {
+    setAlCarro(carrito?.items || []);
+  });
+}, []);
 
   const handleClick = () => {
     if (precioMax === "") {
@@ -77,7 +83,6 @@ export default function ProductsComponent() {
       price: productoSenalado.price,
       cantidad: Number(cantidades[key])
     }
-    console.log(nuevoProducto.cantidad);
     
     /* CREA UN NUEVO OPBJETO PARA EMPUJAR AL CARRITO */
 
@@ -178,7 +183,6 @@ export default function ProductsComponent() {
                 <button disabled={cant === 0} onClick={() => handleAgregarAlCarro(id)} className="disabled:hover:scale-100 disabled:opacity-40 disabled:cursor-not-allowed mt-6 border rounded-xl p-1 hover:scale-105 hover:transition-transform hover:duration-400 cursor-pointer">Agregar al Carrito</button>
 
                 <button onClick={handleWipeCarrito} className="border rounded-xl p-1 mt-4">Limpiar carrito</button>
-
 
               </div>
             </section>
