@@ -87,7 +87,7 @@ export default function ProductsComponent() {
     /* CREA UN NUEVO OPBJETO PARA EMPUJAR AL CARRITO */
 
 
-    const productoYaAgregado = alCarro.find((p) => p.title === nuevoProducto.title)
+    const productoYaAgregado = carrito.items.find((p) => p.title === nuevoProducto.title)
     /* SI NUEVOPRODUCTO.TITLE ES IGUAL A OBJETO DENTRO DE CARRITO.TITLE, SE SUMA LA CANTIDAD DE UNO Y otro */
 
     let nuevoCarrito

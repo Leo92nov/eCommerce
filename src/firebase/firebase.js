@@ -100,8 +100,12 @@ export function carritoExtension(callback) {
 
   return onSnapshot(ref, (snapshot) => {
     const data = snapshot.data()
-    const cantidad = data?.items?.length || 0
-    callback(cantidad)
+    const cantidad = data.items
+    const asd = cantidad.reduce((acc, p) =>{
+      return acc + p.cantidad
+    }, 0)
+  || 0
+    callback(asd)
   })
    
 }
