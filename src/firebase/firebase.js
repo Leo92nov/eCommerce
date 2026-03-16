@@ -90,7 +90,7 @@ export async function deleteCarrito([]){
   const ref = doc(db, "carritos", "N0NghdC6J4bPsduTkTDk")
 
   await updateDoc(ref, {
-    items: {}
+    items: []
   })
 
 }
@@ -108,4 +108,15 @@ export function carritoExtension(callback) {
     callback(asd)
   })
    
+}
+
+export async function filtrado(){
+
+  const ref = await getDocs(collection(db, "products"))
+  const todo = ref.docs.map(doc => doc.data())
+  
+  const category = todo.map((e) => e.Categoria)
+  console.log(category);
+
+
 }
