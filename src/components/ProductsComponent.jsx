@@ -91,6 +91,7 @@ export default function ProductsComponent() {
     const nuevoProducto = {
       title: productoSenalado.title,
       price: productoSenalado.price,
+      image: productoSenalado.image,
       cantidad: Number(cantidades[key])
     }
 
