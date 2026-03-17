@@ -122,15 +122,19 @@ export async function filtrado() {
 
 }
 
+
 export async function compraHecha() {
 
   const ref = await getDocs(collection(db, "products"))
-  const productos = ref.docs.map(doc => doc.data())
+  const productos = ref.docs.map(doc => ({
+    id: doc.id,
+    ...doc.data()
+}))
   return productos
 
-
-
 }
+
+
 
 export function stockUpdate(id, callback) {
   const ref = doc(db, "products", id)
