@@ -46,7 +46,7 @@ export default function CarritoComponent() {
     return <>
 
         <main className="flex justify-center items-center w-full h-auto">
-            <form className="w-150 h-auto bg-red-200">
+            <form className="w-150 h-auto bg-blue-200">
                 {carrito.length > 0 && carrito.map((prod, index) => (
                     <section className="w-[100%] px-20 h-auto flex flex-col justify-between py-4" key={index}>
                         <h2>{prod.title}</h2>
