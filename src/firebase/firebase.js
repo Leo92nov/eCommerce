@@ -3,7 +3,8 @@ import { initializeApp } from "firebase/app";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
-import {addDoc, collection, doc, getDoc, getDocs, getFirestore, query, updateDoc, where, onSnapshot} from "firebase/firestore";
+import { addDoc, collection, doc, getDoc, getDocs, getFirestore, query, updateDoc, where, onSnapshot } from "firebase/firestore";
+import { useState } from "react";
 
 
 // Your web app's Firebase configuration
@@ -21,25 +22,25 @@ const app = initializeApp(firebaseConfig);
 
 const db = getFirestore(app)
 
-export async function getProducts(){
-    const response = await getDocs(collection(db, 'products'));
-    /* este response es un querysnapshot permite acceder a los docs*/
-    const listaProductos = [];
-    response.forEach((documento) => listaProductos.push({id: documento.id, ...documento.data()})) /* .data() trae todos los campos del documento */
-    return listaProductos;
+export async function getProducts() {
+  const response = await getDocs(collection(db, 'products'));
+  /* este response es un querysnapshot permite acceder a los docs*/
+  const listaProductos = [];
+  response.forEach((documento) => listaProductos.push({ id: documento.id, ...documento.data() })) /* .data() trae todos los campos del documento */
+  return listaProductos;
 }
 
 export async function filterProdsByPrice(maxPrice) {
-    const q = query(collection(db,"products"), where("price", "<", maxPrice))
-    const response = await getDocs(q)
-    const listaFiltroPrecio = []
-    response.forEach(docu => listaFiltroPrecio.push({id:docu.id, ...docu.data()}))
-    return listaFiltroPrecio
+  const q = query(collection(db, "products"), where("price", "<", maxPrice))
+  const response = await getDocs(q)
+  const listaFiltroPrecio = []
+  response.forEach(docu => listaFiltroPrecio.push({ id: docu.id, ...docu.data() }))
+  return listaFiltroPrecio
 }
 
 
 /* enviar orden de pedido */
-export async function addOrder(order){
+export async function addOrder(order) {
   const orderCollection = collection(db, "orders")
   const docRef = await addDoc(orderCollection, order)
   console.log(docRef);
@@ -48,34 +49,34 @@ export async function addOrder(order){
 
 }
 
-export async function getOrders(){
+export async function getOrders() {
 
   const response = await getDocs(collection(db, "orders"))
   const listaOrdenes = []
-  response.forEach((ord) => listaOrdenes.push({id:ord.id, ...ord.data()}))
- console.log(listaOrdenes);
- 
+  response.forEach((ord) => listaOrdenes.push({ id: ord.id, ...ord.data() }))
+  console.log(listaOrdenes);
+
 }
 
 export async function updateProduct(id, toUpdate) {
   const productDoc = doc(db, "products", id)
-  
-  try{
+
+  try {
     await updateDoc(productDoc, toUpdate)
-  } catch (error){
+  } catch (error) {
     console.log("Error" + error);
-    
+
   }
 
 }
 export async function getCarrito() {
-const ref = doc(db, "carritos", "N0NghdC6J4bPsduTkTDk")
-const response = await getDoc(ref)
+  const ref = doc(db, "carritos", "N0NghdC6J4bPsduTkTDk")
+  const response = await getDoc(ref)
   const carrito = response.data()
   return carrito
 }
 
-export async function updateCarrito(nuevoCarrito){
+export async function updateCarrito(nuevoCarrito) {
 
   const ref = doc(db, "carritos", "N0NghdC6J4bPsduTkTDk")
 
@@ -85,7 +86,7 @@ export async function updateCarrito(nuevoCarrito){
 
 }
 
-export async function deleteCarrito([]){
+export async function deleteCarrito([]) {
 
   const ref = doc(db, "carritos", "N0NghdC6J4bPsduTkTDk")
 
@@ -96,27 +97,59 @@ export async function deleteCarrito([]){
 }
 
 export function carritoExtension(callback) {
-  const ref = doc(db,"carritos", "N0NghdC6J4bPsduTkTDk")
+  const ref = doc(db, "carritos", "N0NghdC6J4bPsduTkTDk")
 
   return onSnapshot(ref, (snapshot) => {
     const data = snapshot.data()
     const cantidad = data.items
-    const asd = cantidad.reduce((acc, p) =>{
+    const asd = cantidad.reduce((acc, p) => {
       return acc + p.cantidad
     }, 0)
-  || 0
+      || 0
     callback(asd)
   })
-   
+
 }
 
-export async function filtrado(){
+export async function filtrado() {
 
   const ref = await getDocs(collection(db, "products"))
   const todo = ref.docs.map(doc => doc.data())
-  
+
   const category = todo.map((e) => e.Categoria)
   console.log(category);
 
+
+}
+
+export async function compraHecha() {
+
+  const ref = await getDocs(collection(db, "products"))
+  const productos = ref.docs.map(doc => doc.data())
+  return productos
+
+
+
+}
+
+export function stockUpdate(id, callback) {
+  const ref = doc(db, "products", id)
+  
+  return onSnapshot(ref, (snapshot) => {
+  const data = snapshot.data();
+  const productos = data[id].stock;
+
+  const productoSinStock = productos.find(p => p.stock < p.cantidad);
+
+  if (productoSinStock) {
+  alert(`Stock insuficiente para ${productoSinStock.title}`);
+  return;
+}
+  const resultado = productos.reduce((acc, p) => {
+    return acc + (p.stock - p.cantidad);
+  }, 0);
+
+  callback(resultado);
+});
 
 }

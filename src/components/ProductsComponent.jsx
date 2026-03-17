@@ -89,6 +89,7 @@ export default function ProductsComponent() {
 
 
     const nuevoProducto = {
+      id: productoSenalado.id,
       title: productoSenalado.title,
       price: productoSenalado.price,
       image: productoSenalado.image,
