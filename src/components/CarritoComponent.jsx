@@ -16,8 +16,31 @@ export default function CarritoComponent() {
         return acc + p.price * p.cantidad
     }, 0)
 
-    const handleCompra = () =>{
+    console.log(carrito);
+    
+    const detalle = carrito.map(p => {
+        
+         return{Producto: p.title,
+                Cantidad: p.cantidad,
+                PrecioXunidad: p.price} 
+        
+    });
+    console.log(detalle);
+    
 
+    const handleCompra = (e) =>{
+
+        const idTicket = crypto.randomUUID()
+
+        e.preventDefault()
+
+        const ticketCompra = [
+            {...detalle},
+            `Total de Compra: $${total}`,
+            `id de ticket: ${idTicket}`
+        ]
+        console.log(ticketCompra);
+        
     }
 
     return <>
