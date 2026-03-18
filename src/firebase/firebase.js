@@ -129,31 +129,33 @@ export async function compraHecha() {
   const productos = ref.docs.map(doc => ({
     id: doc.id,
     ...doc.data()
-}))
+  }))
   return productos
 
 }
 
 
 
-export function stockUpdate(id, callback) {
-  const ref = doc(db, "products", id)
-  
-  return onSnapshot(ref, (snapshot) => {
-  const data = snapshot.data();
-  const productos = data[id].stock;
+export async function updateStock(id, toUpdate) {
 
-  const productoSinStock = productos.find(p => p.stock < p.cantidad);
+  const producto = doc(db, "products", id)
+  const error = cantidad > stock
 
-  if (productoSinStock) {
-  alert(`Stock insuficiente para ${productoSinStock.title}`);
-  return;
+  try {
+    await updateDoc(producto, toUpdate)
+  } catch {
+    alert("error" + error)
+  }
 }
-  const resultado = productos.reduce((acc, p) => {
-    return acc + (p.stock - p.cantidad);
-  }, 0);
 
-  callback(resultado);
-});
+/* export async function updateProduct(id, toUpdate) {
+  const productDoc = doc(db, "products", id)
 
-}
+  try {
+    await updateDoc(productDoc, toUpdate)
+  } catch (error) {
+    console.log("Error" + error);
+
+  }
+
+} */

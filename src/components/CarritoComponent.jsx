@@ -1,10 +1,19 @@
 import { useState, useEffect } from "react";
-import { compraHecha, getCarrito, stockUpdate } from "../firebase/firebase";
+import { compraHecha, getCarrito, getProducts } from "../firebase/firebase";
+import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 export default function CarritoComponent() {
     const [carrito, setCarrito] = useState([]);
     const [open, setOpen] = useState(false);
     const [ticket, setTicket] = useState(null);
+    const [products, setProducts] = useState([])
+
+    useEffect(() => {
+        getProducts().then((prod) => {
+            setProducts(prod) 
+        })
+    }, [])
 
     useEffect(() => {
         getCarrito().then((carritoData) => {
@@ -57,21 +66,36 @@ export default function CarritoComponent() {
                 stock: productoReal.stock - prod.cantidad
             };
         });
-        console.log(nProductos);
-        
-        const nuevostock = productosStock.map((prod) => {
+
+        const nuevoStock = productosStock.map((prod) => {
             const actualizar = nProductos.find((p) => p.id === prod.id)
 
-            if(actualizar){
-            return{
-                ...actualizar,
+
+            if (actualizar) {
+                return {
+                    ...actualizar,
+                }
+            } else {
+                return prod
             }
-        }else{
-            return prod
-            }
-        }) 
-        console.log(nuevostock);
+        })
+        console.table(nuevoStock);
         
+         setProducts(nuevoStock); 
+        console.log(products);
+        
+
+        ;
+        Swal.fire({
+            title: "Compra realizada",
+            text: "Todo salió perfecto",
+            icon: "success",
+            confirmButtonText: "Genial"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                navigate("/");
+            }
+        });
 
     }
 

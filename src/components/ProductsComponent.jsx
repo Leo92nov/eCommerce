@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getProducts, filterProdsByPrice, filtrado, updateProduct, getCarrito, updateCarrito, deleteCarrito, carritoExtension } from "../firebase/firebase";
+import { getProducts, filterProdsByPrice, filtrado, updateProduct, getCarrito, updateCarrito, deleteCarrito, } from "../firebase/firebase";
 
 export default function ProductsComponent() {
   const [productos, setProductos] = useState([]);
@@ -11,7 +11,7 @@ export default function ProductsComponent() {
   const [condicion, setCondicion] = useState([])
 
   const handleasd = () => {
-    filtrado()
+    stockUpdate()
   }
 
   useEffect(() => {
@@ -307,7 +307,7 @@ export default function ProductsComponent() {
                 <button disabled={cant === 0} onClick={() => handleAgregarAlCarro(id)} className="disabled:hover:scale-100 disabled:opacity-40 disabled:cursor-not-allowed mt-6 border rounded-xl p-1 hover:scale-105 hover:transition-transform hover:duration-400 cursor-pointer">Agregar al Carrito</button>
 
                 <button onClick={handleWipeCarrito} className="border rounded-xl p-1 mt-4">Limpiar carrito</button>
-                <button onClick={handleasd} className="border rounded-xl p-1 mt-4">categorias</button>
+                <button onClick={handleasd} className="border rounded-xl p-1 mt-4">SnapStock</button>
 
               </div>
             </main>
