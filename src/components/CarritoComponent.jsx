@@ -155,7 +155,7 @@ export default function CarritoComponent() {
 
                         <button
                             type="button"
-                            className="border rounded-xl px-4 py-2 hover:bg-gray-200"
+                            className="border rounded-xl px-4 py-2 hover:bg-green-800 hover:text-white cursor-pointer"
                             onClick={handleCompraFinalizada}
                         >
                             Realizar Compra
