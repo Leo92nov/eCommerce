@@ -1,103 +1,105 @@
 import { useState, useEffect } from "react";
-import { compraHecha, getCarrito, getProducts } from "../firebase/firebase";
-import { useNavigate } from "react-router-dom";
+import { getCarrito, getProducts, updateStock, carritoExtension, updateCarrito } from "../firebase/firebase";
 import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
 
 export default function CarritoComponent() {
-    const [carrito, setCarrito] = useState([]);
-    const [open, setOpen] = useState(false);
-    const [ticket, setTicket] = useState(null);
-    const [products, setProducts] = useState([])
+  const [carrito, setCarrito] = useState([]);
+  const [open, setOpen] = useState(false);
+  const [ticket, setTicket] = useState(null);
+  const [products, setProducts] = useState([]);
 
-    useEffect(() => {
-        getProducts().then((prod) => {
-            setProducts(prod) 
-        })
-    }, [])
+  const navigate = useNavigate();
 
-    useEffect(() => {
-        getCarrito().then((carritoData) => {
-            setCarrito(carritoData?.items || []);
-        });
-    }, []);
+  useEffect(() => {
+    getProducts().then((prod) => {
+      setProducts(prod);
+    });
+  }, []);
 
-    const total = carrito.reduce((acc, p) => {
-        return acc + p.price * p.cantidad;
-    }, 0);
+  useEffect(() => {
+    getCarrito().then((carritoData) => {
+      setCarrito(carritoData?.items || []);
+    });
+  }, []);
 
-    const detalle = carrito.map((p) => ({
-        id: p.id,
-        producto: p.title,
-        cantidad: p.cantidad,
-        precioXunidad: p.price,
-        subtotal: p.price * p.cantidad,
-    }));
+  const total = carrito.reduce((acc, p) => {
+    return acc + p.price * p.cantidad;
+  }, 0);
 
-    const handleCompra = (e) => {
-        e.preventDefault();
+  const detalle = carrito.map((p) => ({
+    id: p.id,
+    producto: p.title,
+    cantidad: p.cantidad,
+    precioXunidad: p.price,
+    subtotal: p.price * p.cantidad,
+  }));
 
-        const idTicket = crypto.randomUUID();
+  const handleCompra = (e) => {
+    e.preventDefault();
 
-        const ticketCompra = {
-            idCompra: idTicket,
-            productos: detalle,
-            total: total,
-        };
-        console.log(ticketCompra);
+    const idTicket = crypto.randomUUID();
 
-
-        setTicket(ticketCompra);
-        setOpen(true);
+    const ticketCompra = {
+      idCompra: idTicket,
+      productos: detalle,
+      total: total,
     };
 
-    const handleCompraFinalizada = async (event) => {
-        console.log(carrito);
+    setTicket(ticketCompra);
+    setOpen(true);
+  };
 
-        event.preventDefault()
-        const productosStock = await compraHecha()
-        console.log(productosStock);
+  const handleCompraFinalizada = async (event) => {
+    event.preventDefault();
 
+    try {
+      const productosDB = await getProducts();
 
-        const nProductos = carrito.map((prod) => {
-            const productoReal = productosStock.find((p) => p.id === prod.id);
+      const productosActualizados = carrito.map((prodCarrito) => {
+        const productoReal = productosDB.find((p) => p.id === prodCarrito.id);
 
-            return {
-                ...productoReal,
-                stock: productoReal.stock - prod.cantidad
-            };
-        });
-
-        const nuevoStock = productosStock.map((prod) => {
-            const actualizar = nProductos.find((p) => p.id === prod.id)
-
-
-            if (actualizar) {
-                return {
-                    ...actualizar,
-                }
-            } else {
-                return prod
-            }
-        })
-        console.table(nuevoStock);
-        
-         setProducts(nuevoStock); 
-        console.log(products);
+        console.log(productoReal);
         
 
-        ;
-        Swal.fire({
-            title: "Compra realizada",
-            text: "Todo salió perfecto",
-            icon: "success",
-            confirmButtonText: "Genial"
-        }).then((result) => {
-            if (result.isConfirmed) {
-                navigate("/");
-            }
-        });
+        if (!productoReal) {
+          throw new Error(`No se encontró el producto ${prodCarrito.title}`);
+        }
 
+        if (prodCarrito.cantidad > productoReal.stock) {
+          throw new Error(
+            `No hay stock suficiente para ${productoReal.title}`
+          );
+        }
+
+        return {
+          id: productoReal.id,
+          stock: productoReal.stock - prodCarrito.cantidad,
+        };
+      });
+
+      await updateStock(productosActualizados);
+      await updateCarrito([])
+      Swal.fire({
+        title: "Compra realizada",
+        text: "Todo salió perfecto",
+        icon: "success",
+        confirmButtonText: "Genial",
+      }).then((result) => {
+        if (result.isConfirmed) {
+        carritoExtension(0)
+          navigate("/");
+        }
+      });
+    } catch (error) {
+      Swal.fire({
+        title: "Error",
+        text: error.message || "Ocurrió un problema al finalizar la compra",
+        icon: "error",
+        confirmButtonText: "Entendido",
+      });
     }
+  };
 
     return (
         <main className="flex justify-center items-center w-full h-auto mb-16">

@@ -136,17 +136,22 @@ export async function compraHecha() {
 
 
 
-export async function updateStock(id, toUpdate) {
-
-  const producto = doc(db, "products", id)
-  const error = cantidad > stock
-
+export async function updateStock(productosActualizados) {
   try {
-    await updateDoc(producto, toUpdate)
-  } catch {
-    alert("error" + error)
+    const promesas = productosActualizados.map((prod) => {
+      const productoRef = doc(db, "products", prod.id);
+
+      return updateDoc(productoRef, {
+        stock: prod.stock,
+      });
+    });
+
+    await Promise.all(promesas);
+  } catch (error) {
+    throw new Error("No se pudo actualizar el stock");
   }
 }
+
 
 /* export async function updateProduct(id, toUpdate) {
   const productDoc = doc(db, "products", id)
