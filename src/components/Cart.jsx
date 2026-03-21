@@ -1,27 +1,56 @@
-import { useState } from "react"
-import { carritoExtension } from "../firebase/firebase"
-import { useEffect } from "react"
-import {Link} from 'react-router-dom'
+import { useState, useEffect } from "react";
+import { carritoExtension } from "../firebase/firebase";
+import { Link } from "react-router-dom";
 
-export default function Cart(){
+export default function Cart() {
+  const [cantidad, setCantidad] = useState(0);
 
-    const [cantidad, setCantidad] = useState(0)
+  useEffect(() => {
+    const unsubscribe = carritoExtension((num) => {
+      setCantidad(num);
+    });
 
-   useEffect(() => {
-        const contar = carritoExtension((num) => {
-            setCantidad(num)});
-            return () => contar();},
-    [])
-    
+    return () => unsubscribe();
+  }, []);
 
-    return <>
+  return (
     <Link to="/CarritoComponent">
-    <div className="w-20 h-20 fixed bottom-6 right-6 rounded-full bg-blue-200 cursor-pointer">
-        <section className="h-8 w-8 bg-blue-500 rounded-full right-11 fixed text-center text-white"> 
+      <div
+        className="fixed bottom-6 right-6 z-50 
+        w-16 h-16 rounded-full 
+        bg-black text-white 
+        flex items-center justify-center 
+        shadow-lg hover:shadow-2xl 
+        hover:scale-110 transition-all duration-300 cursor-pointer"
+      >
+        {/* Ícono carrito */}
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className="w-7 h-7"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          strokeWidth="2"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13l-1.35 6.45a1 1 0 001 .55h12.7a1 1 0 001-.8L21 13M7 13h14M9 21a1 1 0 100-2 1 1 0 000 2zm10 0a1 1 0 100-2 1 1 0 000 2z"
+          />
+        </svg>
+
+        {/* Badge cantidad */}
+        {cantidad > 0 && (
+          <span
+            className="absolute -top-1 -right-1 
+            bg-red-500 text-white text-xs font-bold 
+            w-6 h-6 flex items-center justify-center 
+            rounded-full shadow-md animate-bounce"
+          >
             {cantidad}
-        </section>
-        <img src="../../Car6.jpg" alt="" />
-    </div>
+          </span>
+        )}
+      </div>
     </Link>
-</>
+  );
 }
