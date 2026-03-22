@@ -401,14 +401,14 @@ export default function ProductsComponent() {
                 <button
                   disabled={cant === 0}
                   onClick={() => handleAgregarAlCarro(id)}
-                  className="mt-3 bg-black text-white py-3 rounded-2xl font-semibold hover:bg-gray-800 transition disabled:bg-gray-300 disabled:cursor-not-allowed"
+                  className="mt-3 bg-gray-300 text-black py-3 rounded-2xl font-semibold hover:bg-gray-800 hover:bg-green-800 hover:text-white cursor-pointer transition disabled:bg-gray-300 disabled:text-black disabled:cursor-not-allowed"
                 >
                   Agregar al carrito
                 </button>
 
                 <button
                   onClick={handleWipeCarrito}
-                  className="border border-gray-300 py-3 rounded-2xl font-medium text-gray-700 hover:bg-gray-100 transition"
+                  className="border border-gray-300 py-3 rounded-2xl cursor-pointer hover:bg-red-500 hover:text-white font-medium text-gray-700 hover:bg-gray-100 transition"
                 >
                   Limpiar carrito
                 </button>
