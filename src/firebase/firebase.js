@@ -86,6 +86,7 @@ export async function updateCarrito(nuevoCarrito) {
 
 }
 
+
 export async function deleteCarrito([]) {
 
   const ref = doc(db, "carritos", "N0NghdC6J4bPsduTkTDk")

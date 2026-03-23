@@ -41,6 +41,14 @@ export default function CarritoComponent() {
     subtotal: p.price * p.cantidad,
   }));
 
+
+  const handleClick = async (id) => {
+     const carritoUP = carrito.filter(p => p.id !== id)
+     
+    setCarrito(carritoUP)
+    await updateCarrito(carritoUP)
+  }
+
   const handleCompra = (e) => {
     e.preventDefault();
 
@@ -187,6 +195,7 @@ export default function CarritoComponent() {
                             ${prod.price * prod.cantidad}
                           </span>
                         </p>
+                        <button onClick={() => handleClick(prod.id)} className="bg-white px-3 py-1 rounded-xl border border-gray-200 cursor-pointer hover:text-white hover:bg-red-500">Eliminar</button>
                       </div>
                     </div>
                   </article>
