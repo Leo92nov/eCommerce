@@ -1,12 +1,5 @@
 import { useState, useEffect } from "react";
-import {
-  getProducts,
-  filterProdsByPrice,
-  updateProduct,
-  getCarrito,
-  updateCarrito,
-  deleteCarrito,
-} from "../firebase/firebase";
+import {getProducts, filterProdsByPrice, getCarrito, updateCarrito, deleteCarrito} from "../firebase/firebase";
 
 export default function ProductsComponent() {
   const [productos, setProductos] = useState([]);
@@ -66,13 +59,6 @@ export default function ProductsComponent() {
     }
 
     setProductos(filtrados);
-  };
-
-  const hadleUpdate = async (event) => {
-    await updateProduct(event.target.id, { price: 180 });
-    const prod = await getProducts();
-    setProductos(prod);
-    setProductosOriginales(prod);
   };
 
   const handleAumento = (id, stock) => {
