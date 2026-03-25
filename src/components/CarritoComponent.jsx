@@ -44,7 +44,7 @@ export default function CarritoComponent() {
 
   const handleClick = async (id) => {
      const carritoUP = carrito.filter(p => p.id !== id)
-     
+
     setCarrito(carritoUP)
     await updateCarrito(carritoUP)
   }
@@ -304,9 +304,9 @@ export default function CarritoComponent() {
                           </p>
                         </div>
 
-                        <div className="text-sm md:text-right text-gray-700">
+                        <div className="text-sm md:text-right text-gray-800">
                           <p>Precio por unidad: ${e.precioXunidad}</p>
-                          <p className="font-semibold text-gray-900">
+                          <p className="font-semibold text-gray-950">
                             Subtotal: ${e.subtotal}
                           </p>
                         </div>
