@@ -17,7 +17,7 @@ export default function Cart() {
     <Link to="/CarritoComponent">
       <div
         className="fixed bottom-6 right-6 z-50 
-        w-16 h-16 rounded-full 
+        w-18 h-18 rounded-full 
         bg-black text-white 
         flex items-center justify-center 
         shadow-lg hover:shadow-2xl 
@@ -26,7 +26,7 @@ export default function Cart() {
         {/* Ícono carrito */}
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          className="w-7 h-7"
+          className="w-8 h-8"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -44,7 +44,7 @@ export default function Cart() {
           <span
             className="absolute -top-1 -right-1 
             bg-red-500 text-white text-xs font-bold 
-            w-6 h-6 flex items-center justify-center 
+            w-8 h-8 flex items-center justify-center 
             rounded-full shadow-md animate-bounce"
           >
             {cantidad}
