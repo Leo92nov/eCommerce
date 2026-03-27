@@ -304,7 +304,7 @@ export default function CarritoComponent() {
                           </p>
                         </div>
 
-                        <div className="text-sm md:text-right text-gray-800">
+                        <div className="text-sm md:text-right text-gray-900">
                           <p>Precio por unidad: ${e.precioXunidad}</p>
                           <p className="font-semibold text-gray-950">
                             Subtotal: ${e.subtotal}

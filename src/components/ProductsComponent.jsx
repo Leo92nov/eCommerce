@@ -387,7 +387,7 @@ export default function ProductsComponent() {
                 <button
                   disabled={cant === 0}
                   onClick={() => handleAgregarAlCarro(id)}
-                  className="mt-3 bg-gray-300 text-black py-3 rounded-2xl font-semibold hover:bg-gray-800 hover:bg-green-800 hover:text-white cursor-pointer transition disabled:bg-gray-300 disabled:text-black disabled:cursor-not-allowed"
+                  className="mt-3 bg-gray-400 text-black py-3 rounded-2xl font-semibold hover:bg-gray-800 hover:bg-green-800 hover:text-white cursor-pointer transition disabled:bg-gray-300 disabled:text-black disabled:cursor-not-allowed"
                 >
                   Agregar al carrito
                 </button>
