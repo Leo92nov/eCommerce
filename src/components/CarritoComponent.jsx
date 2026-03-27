@@ -292,7 +292,7 @@ export default function CarritoComponent() {
                   {ticket.productos.map((e, index) => (
                     <article
                       key={index}
-                      className="border border-gray-100 rounded-2xl p-4 bg-gray-50"
+                      className="border border-gray-200 rounded-2xl p-4 bg-gray-50"
                     >
                       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
                         <div>
